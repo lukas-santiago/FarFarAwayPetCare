@@ -27,10 +27,9 @@ namespace aspnet_core_dotnet_core
             services.Configure<CookiePolicyOptions>(options =>
             {
                 // This lambda determines whether user consent for non-essential cookies is needed for a given request.
-                options.CheckConsentNeeded = context => true;
+                options.CheckConsentNeeded = _ => true;
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
-
 
             services.AddRazorPages();
         }
@@ -52,9 +51,7 @@ namespace aspnet_core_dotnet_core
             app.UseRouting();
             app.UseAuthorization();
 
-            app.UseEndpoints(endpoints => {
-                endpoints.MapRazorPages();
-            });
+            app.UseEndpoints(endpoints => endpoints.MapRazorPages());
         }
     }
 }

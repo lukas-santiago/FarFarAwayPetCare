@@ -8,12 +8,12 @@ on:
 env:
   AZURE_WEBAPP_NAME: "farfarawaypetcare-api"    # set this to your application's name
   AZURE_WEBAPP_PACKAGE_PATH: '.'             # set this to the path to your web app project, defaults to the repository root
-  DOTNET_VERSION: '3.1.302'                  # set this to the dot net version to use
+  DOTNET_VERSION: '6.0'                  # set this to the dot net version to use
   RESOURCEGROUPNAME: "farfarawaypetcare-api-rg"
   LOCATION: "Brazil South"
   HOSTINGPLANNAME: "farfarawaypetcare-api-plan"
   APPINSIGHTLOCATION: "Brazil South"
-  SKU: "B1 Basic"
+  SKU: "F1 Free"
 
 jobs:
   build:
@@ -131,8 +131,8 @@ jobs:
         $runSetting.RunSettings.TestRunParameters.ChildNodes.Item(0).value = 'https://${{ env.AZURE_WEBAPP_NAME }}.azurewebsites.net/'
         $runSetting.Save("$(pwd)/functionalTests.runsettings")
 
-    - name: Run tests
-      continue-on-error: false
-      run: |
-        cd Application\aspnet-core-dotnet-core.FunctionalTests
-        dotnet test aspnet-core-dotnet-core.FunctionalTests.csproj -s functionalTests.runsettings
+    # - name: Run tests
+    #   continue-on-error: false
+    #   run: |
+    #     cd Application\aspnet-core-dotnet-core.FunctionalTests
+    #     dotnet test aspnet-core-dotnet-core.FunctionalTests.csproj -s functionalTests.runsettings

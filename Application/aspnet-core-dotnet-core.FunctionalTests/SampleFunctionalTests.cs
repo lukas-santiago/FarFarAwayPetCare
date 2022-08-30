@@ -38,7 +38,7 @@ namespace SampleWebApplication.FunctionalTests
             var webAppUrl = testContext.Properties["webAppUrl"].ToString();
 
             var startTimestamp = DateTime.Now.Millisecond;
-            var endTimstamp = startTimestamp + 60 * 10 * 1000;
+            var endTimstamp = startTimestamp + (60 * 10 * 1000);
 
             while (true)
             {
