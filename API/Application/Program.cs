@@ -1,6 +1,8 @@
 using System.Text.Json.Serialization;
 using Application.Configuration;
 using Application.Middlewares;
+using Application.Services;
+using Application.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,9 +14,14 @@ var builder = WebApplication.CreateBuilder(args);
     });
     builder.Services.AddEndpointsApiExplorer();
     builder.Services.AddSwaggerGen();
+    builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 }
 {
     builder.Services.AddDbContext<ApiContext>(options => options.UseInMemoryDatabase("DesafioDistribuicaoDosLucrosDB"));
+
+    builder.Services.AddScoped<IDeviceService, DeviceService>();
+    builder.Services.AddScoped<IDeviceConfigService, DeviceConfigService>();
+    builder.Services.AddScoped<IDeviceDataService, DeviceDataService>();
 }
 
 var app = builder.Build();
