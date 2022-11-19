@@ -11,6 +11,7 @@ public class ApiContext : DbContext
     public virtual DbSet<DeviceConfig> DeviceConfig { get; set; }
     public virtual DbSet<DeviceConfigType> DeviceConfigType { get; set; }
     public virtual DbSet<DeviceData> DeviceData  { get; set; }
+    public virtual DbSet<User> User { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

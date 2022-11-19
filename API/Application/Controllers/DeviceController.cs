@@ -1,12 +1,14 @@
 ﻿using Application.Controllers.Interfaces;
 using Application.Models;
 using Application.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Application.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize]
 public class DeviceController : ControllerBase, ICrudController<Device>
 
 {

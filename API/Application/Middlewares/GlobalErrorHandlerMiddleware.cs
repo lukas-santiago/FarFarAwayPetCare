@@ -37,7 +37,8 @@ internal class GlobalErrorHandlerMiddleware
 
         if (exception is BaseException)
         {
-            status = HttpStatusCode.BadRequest;
+            HttpStatusCode? statusCode = ((BaseException) exception).StatusCode ;
+            status = statusCode == null ? HttpStatusCode.BadRequest : (HttpStatusCode) statusCode;
         }
 
         var result = JsonSerializer.Serialize(new { status, errorMessage, stackTrace, searchInGoogle });
