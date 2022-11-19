@@ -1,0 +1,31 @@
+Rota Base: /api/v0.1
+
+auth:
+  register: /register
+  login: /login
+  logout: /logout
+
+device:
+  get all: /device/
+  get by id: /device/{id}
+  add: /device/
+  edit: /device/{id}
+  delete: /device/{id}
+
+Configuração do device:
+  get by id: /device/config/{id}
+  add: /device/config/
+  edit: /device/config/{id}
+  delete: /device/config/{id}
+
+Configuração do Parâmetro do device:
+  get by id: /device/param/config/{id}
+  add: /device/param/config/
+  edit: /device/param/config/{id}
+  delete: /device/param/config/{id}
+
+Dados dos Parâmetros do device:
+  /device/param/{id}
+  /device/param/
+
+Notificação: /notification/

@@ -1,0 +1,59 @@
+Macrofuncionalidades da Solução:
+  Software:
+    Coleta de Dados
+    Sistema de Usuário
+    Sistema de Aquário e seus Parâmetros
+    Sistema de Assinatura
+    Sistema de Notificações
+    Sistema de Relatórios
+
+  Hardware: ### Fazer um simulador
+    Conectado à internet (IoT)
+    Controle de Alimentação (Pet Feeder)
+    Controle de parâmetros da água (pH, temperatura e amônia)
+    Monitoramento via Câmera (Infravermelho? Fotos? Vídeos?)
+    Controle de Iluminação
+    Controlar as tomadas dos equipamentos do aquário
+    Controle de funcionamento da bomba de recalque
+    Controle de nível de água (Boia?)
+    Sistema de vizualição dos dados via display
+
+Personas:
+  Cliente #Usuário que deseja ter aquários e monitorá-los conforme a necessidade
+  Administrador #Verifica todos os clientes, aquários e coletas.
+
+Scrum Master:
+  Lukas
+
+Product Owner:
+  Nicolas
+
+Sprint:
+  Método: Kanban
+  Tempo: 2 semanas
+
+Tarefas:
+  Projeto:
+    Começar Kanban
+    Atualizar a cada 3 dias
+
+  Infraestrura:
+    Criar ambiente na nuvem para backend, frontend e banco de dados
+    Dar acesso a todos no grupo
+
+  Banco de dados:
+    Criar tabelas do banco de dados dados
+    Criar dados fictícios para validação das entidades do banco
+
+  Hardware:
+    Criar simulador em procedure ou em dotnet para input de dados aleatórios
+
+  Frontend:
+    Organizar telas necessárias para o MVP
+    Desenhar telas necessárias
+    Organizar telas secundárias
+    Escolher framework
+
+  Backend:
+    Implementar CRUD das tabelas do banco
+

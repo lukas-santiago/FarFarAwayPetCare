@@ -1,0 +1,68 @@
+Role:
+  ID_ROLE
+  ROLE_NAME
+
+Usuário:
+  ID_USUARIO
+  NOME
+  EMAIL
+  SENHA
+
+Aquário:
+  ID_AQUARIO
+  ID_USUARIO
+  APELIDO
+  DIMENSÕES
+  DESCRIÇÃO
+
+Tipo da Configuração do Aquário:
+  ID_TIPO_CONFIG_AQUARIO
+  NOME
+
+Configuração do Aquário:
+  ID_CONFIG_AQUARIO
+  ID_TIPO_CONFIG_AQUARIO
+  ID_AQUARIO
+  VALOR
+
+Parâmetro:
+  ID_PARAMETRO
+  NOME
+
+Configuração dos Parâmetros do Aquário:
+  ID_CONFIG_PARAMETRO
+  ID_PARAMETRO
+  ID_AQUARIO
+  VALOR
+
+Coleta de dados:
+  ID_COLETA
+  ID_AQUARIO
+  ID_PARAMETRO
+  VALOR
+  CRIADO_EM
+
+Tipo de Notificação:
+  ID_TIPO_NOTIFICACAO
+  NOME
+
+Notificação:
+  ID_NOTIFICACAO
+  ID_TIPO_NOTIFICACAO
+  ID_AQUARIO
+  NOME
+  DESCRIÇÃO
+  EXPIRA_EM
+  CRIADO_EM
+
+Assinatura:
+  ID_ASSINATURA
+  ID_USUARIO
+  NIVEL
+
+Relatórios:
+  ID_RELATORIO
+  ID_USUARIO
+  ID_AQUARIO
+  TIPO
+  VALOR

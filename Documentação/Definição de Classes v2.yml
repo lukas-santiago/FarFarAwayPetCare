@@ -1,0 +1,39 @@
+Usuário:
+    Acesso ao sistema
+
+Função de Usuário:
+    Tipos de usuário:
+        Administrador:
+            Verifica todos os clientes, aquários e coletas.
+        Cliente:
+            Usuário que deseja ter aquários e monitorá-los conforme a necessidade
+
+Dispositivo: 
+    Item cadastrado pelo usuário e é representação virtual do hardware de controle do aquário
+
+Configuração do Dispositivo: 
+    Particularidades de cada aquário que o usuário cadastra:
+        - Periodicidade de coleta
+        # - Periodicidade de manutenção/calibragem dos sensores
+        # - Metas de parâmetros ou se parâmetro irá ser coletado
+        # - Objetivo de valor da coleta
+        # - Tolerância de valor para mais ou para menos
+
+Dados dos Parâmetros do Dispositivo:
+    Local de coleta dos dados coletados
+
+# Notificação:
+#     Notificação de valores fora da tolerância
+
+# Tipo de Notificação:
+#     Classificação
+
+# Assinatura:
+#     Monitoramento de aquários via internet
+#     Serviço de Manutenção
+
+Relatórios:
+    Análise dos dados coletados
+
+# Recomendação:
+#     Análise dos relatórios para sugestões de compra para o usuário

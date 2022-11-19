@@ -1,0 +1,43 @@
+Usuário:
+    Acesso ao sistema
+
+Função de Usuário:
+    Tipos de usuário:
+        Administrador:
+            Verifica todos os clientes, aquários e coletas.
+        Cliente:
+            Usuário que deseja ter aquários e monitorá-los conforme a necessidade
+
+Aquário: 
+    Itens cadastrado pelo usuário
+
+Configuração do Aquário: 
+    Particularidades de cada aquário que o usuário cadastra, e.g.: Metas de parâmetros ou se parâmetro irá ser coletado
+
+Dados dos Parâmetros do Aquário:
+    Local de coleta dos dados coletados
+
+Tipo de Parâmetro:
+    Classificação do parâmetro
+
+Configuração do Parâmetro do Aquário: 
+    Objetivo de valor da coleta
+    Tolerância de valor para mais ou para menos
+    Periodicidade de coleta
+    Periodicidade de manutenção/calibragem dos sensores
+
+Alerta:
+    Notificação de valores fora da tolerância
+
+Tipo de Alerta:
+    Classificação
+
+Assinatura:
+    Monitoramento de aquários via internet
+    Serviço de Manutenção
+
+Relatórios:
+    Análise dos dados coletados
+
+Recomendação:
+    Análise dos relatórios para sugestões de compra para o usuário

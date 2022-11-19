@@ -1,0 +1,73 @@
+# Sistema de Usuário
+funcao:
+  id_funcao
+  funcao_name
+funcao_usuario:
+  id_funcao_usuario
+  id_role
+usuario:
+  id_usuario
+  nome
+  email
+  senha
+# Sistema de Aquário e seus Parâmetros
+aquario:
+  id_aquario
+  id_usuario
+  apelido
+  dimensoes
+  descricao
+aquario_tipo_config:
+  id_tipo_config_aquario
+  nome
+aquario_config:
+  id_config_aquario
+  id_tipo_config_aquario
+  id_aquario
+  valor
+parametro:
+  id_parametro
+  nome
+parametro_tipo_config:
+  id_parametro_tipo_config
+  nome
+parametro_config:
+  id_config_parametro
+  id_parametro_tipo_config
+  id_parametro
+  id_aquario
+  valor
+# Coleta de Dados
+coleta:
+  id_coleta
+  id_aquario
+  id_parametro
+  valor
+  criado_em
+# Sistema de Notificações
+tipo_notificacao:
+  id_tipo_notificacao
+  nome
+notificacao:
+  id_notificacao
+  id_tipo_notificacao
+  id_aquario
+  nome
+  descrição
+  expira_em
+  criado_em
+# Sistema de Assinatura
+assinatura:
+  id_assinatura
+  nivel
+assinatura_usuario:
+  id_assinatura_usuario
+  id_assinatura
+  id_usuario
+# Sistema de Relatórios
+relatorio:
+  id_relatorio
+  id_usuario
+  id_aquario
+  tipo
+  valor
