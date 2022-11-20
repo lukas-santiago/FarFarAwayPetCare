@@ -1,4 +1,4 @@
-using System.Reflection;
+using System.Net;
 using System.Text;
 using System.Text.Json.Serialization;
 using Application.Configuration;
@@ -6,10 +6,12 @@ using Application.Middlewares;
 using Application.Services;
 using Application.Services.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Newtonsoft.Json;
 
 var builder = WebApplication.CreateBuilder(args);
 {
@@ -70,23 +72,31 @@ var builder = WebApplication.CreateBuilder(args);
             ValidateIssuerSigningKey = true,
             IssuerSigningKey = new SymmetricSecurityKey(key),
             ValidateIssuer = false,
-            ValidateAudience = false
+            ValidateAudience = false,
+            ValidateLifetime = true,
+            ClockSkew = TimeSpan.Zero
         };
     });
 }
 {
-    builder.Services.AddDbContext<ApiContext>(options => options.UseInMemoryDatabase("DesafioDistribuicaoDosLucrosDB"));
+    builder.Services.AddDbContext<ApiContext>(options =>
+    {
+        //options.UseInMemoryDatabase("DesafioDistribuicaoDosLucrosDB");
+        options.UseSqlServer(builder.Configuration.GetConnectionString("MsSqlConnection"));
+    }); 
+    builder.Services.AddScoped<InitialDataGenerator>();
+
 
     builder.Services.AddScoped<IDeviceService, DeviceService>();
     builder.Services.AddScoped<IDeviceConfigService, DeviceConfigService>();
     builder.Services.AddScoped<IDeviceDataService, DeviceDataService>();
-    builder.Services.AddScoped<UserServices>();
+    builder.Services.AddScoped<UserService>();
 }
 
 var app = builder.Build();
 {
     app.UseMiddleware(typeof(GlobalErrorHandlerMiddleware));
-    
+
     app.UseCors(builder => builder
         .AllowAnyOrigin()
         .AllowAnyMethod()
@@ -99,13 +109,12 @@ var app = builder.Build();
         app.UseSwaggerUI();
     }
 
-    // using (var scope = app.Services.CreateScope())
-    // {
-    //     scope.ServiceProvider.GetRequiredService<InitialDataGenerator>();
-    // }
+    using (var scope = app.Services.CreateScope())
+    {
+        scope.ServiceProvider.GetRequiredService<InitialDataGenerator>();
+    }
 
     // app.UseHttpsRedirection();
-
     app.UseAuthentication();
     app.UseAuthorization();
     app.MapControllers();

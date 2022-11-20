@@ -12,6 +12,7 @@ public interface ICrudService<T> where T : class
 }
 public interface IDeviceService: ICrudService<Device>
 {
+    public Task<object> GetFullConfiguration(string UniqueDeviceId);
 }
 
 public interface IDeviceConfigService : ICrudService<DeviceConfig>

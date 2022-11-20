@@ -2,6 +2,7 @@
 using Application.Errors;
 using Application.Models;
 using Application.Services.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace Application.Services;
 
@@ -39,7 +40,7 @@ public class DeviceService : IDeviceService
 
     public async Task<Device> Edit(Device value)
     {
-        var entity = await _connection.Device.FindAsync(value.Id);
+        var entity = await _connection.Device.Where(e => e.Id == value.Id && e.User == value.User).FirstAsync();
 
         if (entity == null)
             throw new NotFoundException("Dispositivo não encontrado");
@@ -67,5 +68,15 @@ public class DeviceService : IDeviceService
     {
         List<Device> result = _connection.Device.OrderBy(f => f.Id).ToList();
         return await Task.FromResult(result);
+    }
+
+    public async Task<object> GetFullConfiguration(string UniqueDeviceId)
+    {
+        var entity = _connection.Device.Where(e => e.UniqueDeviceId == UniqueDeviceId).FirstOrDefault();
+
+        if (entity == null)
+            throw new NotFoundException("Dispositivo não encontrado");
+
+        return await Task.FromResult(entity);
     }
 }
