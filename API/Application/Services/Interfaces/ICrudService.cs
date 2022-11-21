@@ -1,4 +1,5 @@
 ﻿using Application.Models;
+using Application.Models.View;
 
 namespace Application.Services.Interfaces;
 
@@ -19,6 +20,7 @@ public interface IDeviceConfigService : ICrudService<DeviceConfig>
 {
     public Task<List<DeviceConfig>> GetByDevice(int DeviceId);
     public Task<DeviceConfig> GetByDeviceConfigType(int DeviceConfigTypeId);
+    Task<object?> Save(DeviceConfigView value);
 }
 
 public interface IDeviceDataService : ICrudService<DeviceData>

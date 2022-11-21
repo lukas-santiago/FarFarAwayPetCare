@@ -1,0 +1,10 @@
+.layout-container {
+  height: 100%;
+  display: flex;
+}
+
+.content-container {
+    padding: 2.5em 5em;
+    color: rgb(43, 43, 43);
+    width: 100%;
+}

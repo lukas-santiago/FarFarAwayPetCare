@@ -30,7 +30,8 @@ public class InitialDataGenerator
                 new Models.DeviceConfigType() { Nome = "Amônia" },
                 new Models.DeviceConfigType() { Nome = "Imagem" },
                 new Models.DeviceConfigType() { Nome = "Iluminação" },
-                new Models.DeviceConfigType() { Nome = "Tomada" }
+                new Models.DeviceConfigType() { Nome = "Tomada" },
+                new Models.DeviceConfigType() { Nome = "Alimentação" }
             );
 
         context.SaveChanges();

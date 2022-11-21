@@ -1,7 +1,9 @@
 ﻿using Application.Configuration;
 using Application.Errors;
 using Application.Models;
+using Application.Models.View;
 using Application.Services.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace Application.Services;
 
@@ -87,5 +89,25 @@ public class DeviceConfigService: IDeviceConfigService
             throw new NotFoundException("Configuração do Dispositivo não encontrado");
 
         return Task.FromResult(entity);
+    }
+
+    public async Task<object?> Save(DeviceConfigView value)
+    {
+        await _connection.DeviceConfig.Where(e => e.DeviceId == value.DeviceId).ExecuteDeleteAsync();
+        foreach (var deviceConfig in value.deviceConfigs)
+        {
+            await Add(new DeviceConfig()
+            {
+                DeviceId = value.DeviceId,
+                Device = _connection.Device.Find(value.DeviceId),
+                DeviceConfigTypeId = deviceConfig.DeviceConfigTypeId,
+                DeviceConfigType = _connection.DeviceConfigType.Find(deviceConfig.DeviceConfigTypeId),
+                Periodicidade = deviceConfig.Periodicidade,
+                extras = deviceConfig.extras,
+                CreatedOn = DateTime.Now,
+                UpdatedDate = DateTime.Now,
+            });
+        }
+        return "";
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Application.Controllers.Interfaces;
 using Application.Models;
+using Application.Models.View;
 using Application.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -22,6 +23,12 @@ public class DeviceConfigController : ControllerBase, ICrudController<DeviceConf
         return Ok(await _service.GetAll());
 
     }
+    [HttpGet("byDevice")]
+    public async Task<IActionResult> GetByDevice([FromQuery] int device_id)
+    {
+        return Ok(await _service.GetByDevice(device_id));
+
+    }
     [HttpGet("{id:int}")]
     public async Task<IActionResult> Get([FromRoute] int id)
     {
@@ -31,6 +38,11 @@ public class DeviceConfigController : ControllerBase, ICrudController<DeviceConf
     public async Task<IActionResult> Add([FromBody] DeviceConfig value)
     {
         return Ok(await _service.Add(value));
+    }
+    [HttpPost("save")]
+    public async Task<IActionResult> Save([FromBody] DeviceConfigView value)
+    {
+        return Ok(await _service.Save(value));
     }
     [HttpPut]
     public async Task<IActionResult> Edit([FromBody] DeviceConfig value)
