@@ -6,5 +6,4 @@ public class DeviceData : BaseModel
     public int Value { get; set; }
 
     public int DeviceConfigId { get; set; }
-    public DeviceConfig? DeviceConfig { get; set; }
 }

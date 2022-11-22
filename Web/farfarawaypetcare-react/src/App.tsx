@@ -18,6 +18,7 @@ import { useContext, useEffect, useMemo, useState } from 'react'
 import { LoginRoute } from './routes/Auth/Login'
 import { RegisterRoute } from './routes/Auth/Register'
 import { ConfiguracaoDispositivoDetalhesRoute } from './routes/Configurações/ConfiguracaoDispositivoDetalhesRoute'
+import { RelatorioColetaRoute } from './routes/Relatório/RelatorioColetaRoute'
 
 function App() {
   const navigate = useNavigate()
@@ -47,6 +48,12 @@ function App() {
         <Route path="/register" element={<RegisterRoute />} />
         {user ? (
           <>
+            <Route
+              path="/relatorio/coleta"
+              element={
+                <ContentLayout child={<RelatorioColetaRoute />} />
+              }
+            />
             <Route
               path="/configuracao/dispositivos"
               element={
@@ -80,7 +87,7 @@ function ContentLayout({ child }: { child: any }) {
           <Menu>
             <MenuItem routerLink={<Link to="/" />}>Inicio</MenuItem>
             <SubMenu label="Relatório">
-              {/* <MenuItem routerLink={<Link to='/relatorio/distribuicao' />}>Relatório de Distribuição</MenuItem> */}
+              <MenuItem routerLink={<Link to='/relatorio/coleta' />}>Relatório de Coleta</MenuItem>
             </SubMenu>
             <SubMenu label="Configurações">
               <MenuItem routerLink={<Link to="/configuracao/dispositivos" />}>
