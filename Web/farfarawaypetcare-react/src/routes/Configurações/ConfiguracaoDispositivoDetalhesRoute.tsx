@@ -5,12 +5,14 @@ import { Container, Button } from 'react-bootstrap'
 import { useNavigate, useParams } from 'react-router-dom'
 import GlobalContext from '../../contexts/global'
 import {
+  deleteDevice,
   getDevice,
   getDeviceConfigGetByDevice,
   saveDeviceConfigs,
 } from '../../services/api'
 import { Device, DeviceConfig } from '../../types/types'
 import { useFormik } from 'formik'
+import { ErrorBoundary } from '../../components/ErrorBoundary'
 
 export function ConfiguracaoDispositivoDetalhesRoute() {
   const navigate = useNavigate()
@@ -19,6 +21,7 @@ export function ConfiguracaoDispositivoDetalhesRoute() {
   const [device, setDevice] = useState<Partial<Device>>(defaultVar1)
   const [deviceConfig, setDeviceConfig] = useState<DeviceConfig[]>(defaultVar)
 
+  console.log(deviceConfig);
   const formik = useFormik<DeviceConfigForm>({
     initialValues: {
       device: {
@@ -27,35 +30,35 @@ export function ConfiguracaoDispositivoDetalhesRoute() {
       },
       deviceConfig: {
         ph: {
-          ativo: deviceConfig[0].periodicidade > 0,
-          periodicidade: String(deviceConfig[0].periodicidade),
+          ativo: deviceConfig[0]?.periodicidade > 0 || false,
+          periodicidade: String(deviceConfig[0]?.periodicidade) || '0',
         },
         temperatura: {
-          ativo: deviceConfig[1].periodicidade > 0,
-          periodicidade: String(deviceConfig[1].periodicidade),
+          ativo: deviceConfig[1]?.periodicidade > 0 || false,
+          periodicidade: String(deviceConfig[1]?.periodicidade) || '0',
         },
         amonia: {
-          ativo: deviceConfig[2].periodicidade > 0,
-          periodicidade: String(deviceConfig[2].periodicidade),
+          ativo: deviceConfig[2]?.periodicidade > 0 || false,
+          periodicidade: String(deviceConfig[2]?.periodicidade) || '0',
         },
         imagem: {
-          ativo: deviceConfig[3].periodicidade > 0,
-          periodicidade: String(deviceConfig[3].periodicidade),
+          ativo: deviceConfig[3]?.periodicidade > 0 || false,
+          periodicidade: String(deviceConfig[3]?.periodicidade) || '0',
         },
         iluminacao: {
-          ativo: deviceConfig[4].periodicidade > 0,
-          inicio: deviceConfig[4].extras.split('-')[0],
-          fim: deviceConfig[4].extras.split('-')[1],
+          ativo: deviceConfig[4]?.periodicidade > 0 || false,
+          inicio: deviceConfig[4]?.extras.split('-')[0] || '00:00',
+          fim: deviceConfig[4]?.extras.split('-')[1] || '00:00',
         },
         tomada: {
-          ativo: deviceConfig[5].periodicidade > 0,
-          inicio: deviceConfig[5].extras.split('-')[0],
-          fim: deviceConfig[5].extras.split('-')[1],
+          ativo: deviceConfig[5]?.periodicidade > 0 || false,
+          inicio: deviceConfig[5]?.extras.split('-')[0] || '00:00',
+          fim: deviceConfig[5]?.extras.split('-')[1] || '00:00',
         },
         alimentacao: {
-          ativo: deviceConfig[6].periodicidade > 0,
-          inicio: deviceConfig[6].extras.split('-')[0],
-          fim: deviceConfig[6].extras.split('-')[1],
+          ativo: deviceConfig[6]?.periodicidade > 0 || false,
+          inicio: deviceConfig[6]?.extras.split('-')[0] || '00:00',
+          fim: deviceConfig[6]?.extras.split('-')[1] || '00:00',
         },
       },
     },
@@ -145,197 +148,202 @@ export function ConfiguracaoDispositivoDetalhesRoute() {
     <Container>
       <h1 className="mb-3">Detalhes do Dispositivo: {device?.nome}</h1>
       <hr />
-      <section>
-        <form onSubmit={formik.handleSubmit}>
-          <div>
-            <label>Nome</label>
-            <br />
-            <input
-              type="text"
-              name="device.nome"
-              onChange={formik.handleChange}
-              value={formik.values.device.nome}
-            />
-          </div>
-          <div>
-            <label>ID do Dispositivo</label>
-            <br />
-            <input
-              type="text"
-              name="device.uniqueDeviceId"
-              onChange={formik.handleChange}
-              value={formik.values.device.uniqueDeviceId}
-            />
-          </div>
-          <hr />
-          <div className="d-flex gap-2 mb-2 align-items-center">
-            <div>pH</div>
-            <input
-              type="checkbox"
-              name="deviceConfig.ph.ativo"
-              value={formik.values.deviceConfig.ph.ativo}
-              checked={formik.values.deviceConfig.ph.ativo}
-              onChange={formik.handleChange}
-            />
-            <select
-              name="deviceConfig.ph.periodicidade"
-              value={formik.values.deviceConfig.ph.periodicidade}
-              onChange={formik.handleChange}
-            >
-              <option value="0">Selecione um período</option>
-              <option value="60">A cada 1 minuto</option>
-              <option value="120">A cada 3 minutos</option>
-              <option value="300">A cada 5 minutos</option>
-              <option value="600">A cada 10 minutos</option>
-            </select>
-          </div>
-          <div className="d-flex gap-2 mb-2 align-items-center">
-            <label>Temperatura</label>
-            <input
-              type="checkbox"
-              name="deviceConfig.temperatura.ativo"
-              value={formik.values.deviceConfig.temperatura.ativo}
-              checked={formik.values.deviceConfig.temperatura.ativo}
-              onChange={formik.handleChange}
-            />
+      <ErrorBoundary>
+        <section>
+          <form onSubmit={formik.handleSubmit}>
+            <div>
+              <label>Nome</label>
+              <br />
+              <input
+                type="text"
+                name="device.nome"
+                onChange={formik.handleChange}
+                value={formik.values.device.nome}
+              />
+            </div>
+            <div>
+              <label>ID do Dispositivo</label>
+              <br />
+              <input
+                type="text"
+                name="device.uniqueDeviceId"
+                onChange={formik.handleChange}
+                value={formik.values.device.uniqueDeviceId}
+              />
+            </div>
+            <hr />
+            <div className="d-flex gap-2 mb-2 align-items-center">
+              <div>pH</div>
+              <input
+                type="checkbox"
+                name="deviceConfig.ph.ativo"
+                value={formik.values.deviceConfig.ph.ativo}
+                checked={formik.values.deviceConfig.ph.ativo}
+                onChange={formik.handleChange}
+              />
+              <select
+                name="deviceConfig.ph.periodicidade"
+                value={formik.values.deviceConfig.ph.periodicidade}
+                onChange={formik.handleChange}
+              >
+                <option value="0">Selecione um período</option>
+                <option value="60">A cada 1 minuto</option>
+                <option value="120">A cada 3 minutos</option>
+                <option value="300">A cada 5 minutos</option>
+                <option value="600">A cada 10 minutos</option>
+              </select>
+            </div>
+            <div className="d-flex gap-2 mb-2 align-items-center">
+              <label>Temperatura</label>
+              <input
+                type="checkbox"
+                name="deviceConfig.temperatura.ativo"
+                value={formik.values.deviceConfig.temperatura.ativo}
+                checked={formik.values.deviceConfig.temperatura.ativo}
+                onChange={formik.handleChange}
+              />
 
-            <select
-              name="deviceConfig.temperatura.periodicidade"
-              value={formik.values.deviceConfig.temperatura.periodicidade}
-              onChange={formik.handleChange}
-            >
-              <option value="0">Selecione um período</option>
-              <option value="60">A cada 1 minuto</option>
-              <option value="120">A cada 3 minutos</option>
-              <option value="300">A cada 5 minutos</option>
-              <option value="600">A cada 10 minutos</option>
-            </select>
-          </div>
-          <div className="d-flex gap-2 mb-2 align-items-center">
-            <label>Amônia</label>
-            <input
-              type="checkbox"
-              name="deviceConfig.amonia.ativo"
-              value={formik.values.deviceConfig.amonia.ativo}
-              checked={formik.values.deviceConfig.amonia.ativo}
-              onChange={formik.handleChange}
-            />
+              <select
+                name="deviceConfig.temperatura.periodicidade"
+                value={formik.values.deviceConfig.temperatura.periodicidade}
+                onChange={formik.handleChange}
+              >
+                <option value="0">Selecione um período</option>
+                <option value="60">A cada 1 minuto</option>
+                <option value="120">A cada 3 minutos</option>
+                <option value="300">A cada 5 minutos</option>
+                <option value="600">A cada 10 minutos</option>
+              </select>
+            </div>
+            <div className="d-flex gap-2 mb-2 align-items-center">
+              <label>Amônia</label>
+              <input
+                type="checkbox"
+                name="deviceConfig.amonia.ativo"
+                value={formik.values.deviceConfig.amonia.ativo}
+                checked={formik.values.deviceConfig.amonia.ativo}
+                onChange={formik.handleChange}
+              />
 
-            <select
-              name="deviceConfig.amonia.periodicidade"
-              value={formik.values.deviceConfig.amonia.periodicidade}
-              onChange={formik.handleChange}
-            >
-              <option value="0">Selecione um período</option>
-              <option value="60">A cada 1 minuto</option>
-              <option value="120">A cada 3 minutos</option>
-              <option value="300">A cada 5 minutos</option>
-              <option value="600">A cada 10 minutos</option>
-            </select>
-          </div>
-          <div className="d-flex gap-2 mb-2 align-items-center">
-            <label>Imagem</label>
-            <input
-              type="checkbox"
-              name="deviceConfig.imagem.ativo"
-              value={formik.values.deviceConfig.imagem.ativo}
-              checked={formik.values.deviceConfig.imagem.ativo}
-              onChange={formik.handleChange}
-            />
+              <select
+                name="deviceConfig.amonia.periodicidade"
+                value={formik.values.deviceConfig.amonia.periodicidade}
+                onChange={formik.handleChange}
+              >
+                <option value="0">Selecione um período</option>
+                <option value="60">A cada 1 minuto</option>
+                <option value="120">A cada 3 minutos</option>
+                <option value="300">A cada 5 minutos</option>
+                <option value="600">A cada 10 minutos</option>
+              </select>
+            </div>
+            <div className="d-flex gap-2 mb-2 align-items-center">
+              <label>Imagem</label>
+              <input
+                type="checkbox"
+                name="deviceConfig.imagem.ativo"
+                value={formik.values.deviceConfig.imagem.ativo}
+                checked={formik.values.deviceConfig.imagem.ativo}
+                onChange={formik.handleChange}
+              />
 
-            <select
-              name="deviceConfig.imagem.periodicidade"
-              value={formik.values.deviceConfig.imagem.periodicidade}
-              onChange={formik.handleChange}
-            >
-              <option value="0">Selecione um período</option>
-              <option value="60">A cada 1 minuto</option>
-              <option value="120">A cada 3 minutos</option>
-              <option value="300">A cada 5 minutos</option>
-              <option value="600">A cada 10 minutos</option>
-            </select>
-          </div>
-          <div className="d-flex gap-2 mb-2 align-items-center">
-            <label>Iluminação</label>
-            <input
-              type="checkbox"
-              name="deviceConfig.iluminacao.ativo"
-              value={formik.values.deviceConfig.iluminacao.ativo}
-              checked={formik.values.deviceConfig.iluminacao.ativo}
-              onChange={formik.handleChange}
-            />
+              <select
+                name="deviceConfig.imagem.periodicidade"
+                value={formik.values.deviceConfig.imagem.periodicidade}
+                onChange={formik.handleChange}
+              >
+                <option value="0">Selecione um período</option>
+                <option value="60">A cada 1 minuto</option>
+                <option value="120">A cada 3 minutos</option>
+                <option value="300">A cada 5 minutos</option>
+                <option value="600">A cada 10 minutos</option>
+              </select>
+            </div>
+            <div className="d-flex gap-2 mb-2 align-items-center">
+              <label>Iluminação</label>
+              <input
+                type="checkbox"
+                name="deviceConfig.iluminacao.ativo"
+                value={formik.values.deviceConfig.iluminacao.ativo}
+                checked={formik.values.deviceConfig.iluminacao.ativo}
+                onChange={formik.handleChange}
+              />
 
-            <label>Liga às</label>
-            <input
-              type="time"
-              name="deviceConfig.iluminacao.inicio"
-              value={formik.values.deviceConfig.iluminacao.inicio}
-              onChange={formik.handleChange}
-            />
-            <label>Desliga às</label>
-            <input
-              type="time"
-              name="deviceConfig.iluminacao.fim"
-              value={formik.values.deviceConfig.iluminacao.fim}
-              onChange={formik.handleChange}
-            />
-          </div>
-          <div className="d-flex gap-2 mb-2 align-items-center">
-            <label>Tomada</label>
-            <input
-              type="checkbox"
-              name="deviceConfig.tomada.ativo"
-              value={formik.values.deviceConfig.tomada.ativo}
-              checked={formik.values.deviceConfig.tomada.ativo}
-              onChange={formik.handleChange}
-            />
+              <label>Liga às</label>
+              <input
+                type="time"
+                name="deviceConfig.iluminacao.inicio"
+                value={formik.values.deviceConfig.iluminacao.inicio}
+                onChange={formik.handleChange}
+              />
+              <label>Desliga às</label>
+              <input
+                type="time"
+                name="deviceConfig.iluminacao.fim"
+                value={formik.values.deviceConfig.iluminacao.fim}
+                onChange={formik.handleChange}
+              />
+            </div>
+            <div className="d-flex gap-2 mb-2 align-items-center">
+              <label>Tomada</label>
+              <input
+                type="checkbox"
+                name="deviceConfig.tomada.ativo"
+                value={formik.values.deviceConfig.tomada.ativo}
+                checked={formik.values.deviceConfig.tomada.ativo}
+                onChange={formik.handleChange}
+              />
 
-            <label>Liga às</label>
-            <input
-              type="time"
-              name="deviceConfig.tomada.inicio"
-              value={formik.values.deviceConfig.tomada.inicio}
-              onChange={formik.handleChange}
-            />
-            <label>Desliga às</label>
-            <input
-              type="time"
-              name="deviceConfig.tomada.fim"
-              value={formik.values.deviceConfig.tomada.fim}
-              onChange={formik.handleChange}
-            />
-          </div>
-          <div className="d-flex gap-2 mb-2 align-items-center">
-            <label>Alimentação (1 porção)</label>
-            <input
-              type="checkbox"
-              name="deviceConfig.alimentacao.ativo"
-              value={formik.values.deviceConfig.alimentacao.ativo}
-              checked={formik.values.deviceConfig.alimentacao.ativo}
-              onChange={formik.handleChange}
-            />
+              <label>Liga às</label>
+              <input
+                type="time"
+                name="deviceConfig.tomada.inicio"
+                value={formik.values.deviceConfig.tomada.inicio}
+                onChange={formik.handleChange}
+              />
+              <label>Desliga às</label>
+              <input
+                type="time"
+                name="deviceConfig.tomada.fim"
+                value={formik.values.deviceConfig.tomada.fim}
+                onChange={formik.handleChange}
+              />
+            </div>
+            <div className="d-flex gap-2 mb-2 align-items-center">
+              <label>Alimentação (1 porção)</label>
+              <input
+                type="checkbox"
+                name="deviceConfig.alimentacao.ativo"
+                value={formik.values.deviceConfig.alimentacao.ativo}
+                checked={formik.values.deviceConfig.alimentacao.ativo}
+                onChange={formik.handleChange}
+              />
 
-            <label>1ª alimentação às</label>
-            <input
-              type="time"
-              name="deviceConfig.alimentacao.inicio"
-              value={formik.values.deviceConfig.alimentacao.inicio}
-              onChange={formik.handleChange}
-            />
-            <label>2ª alimentação às</label>
-            <input
-              type="time"
-              name="deviceConfig.alimentacao.fim"
-              value={formik.values.deviceConfig.alimentacao.fim}
-              onChange={formik.handleChange}
-            />
-          </div>
-          <div className="d-flex gap-2 mb-2 align-items-center">
-            <Button type="submit">Salvar</Button>
-            <Button variant="danger">Deletar</Button>
-          </div>
-        </form>
-      </section>
+              <label>1ª alimentação às</label>
+              <input
+                type="time"
+                name="deviceConfig.alimentacao.inicio"
+                value={formik.values.deviceConfig.alimentacao.inicio}
+                onChange={formik.handleChange}
+              />
+              <label>2ª alimentação às</label>
+              <input
+                type="time"
+                name="deviceConfig.alimentacao.fim"
+                value={formik.values.deviceConfig.alimentacao.fim}
+                onChange={formik.handleChange}
+              />
+            </div>
+            <div className="d-flex gap-2 mb-2 align-items-center">
+              <Button type="submit">Salvar</Button>
+              <Button variant="danger" onClick={() => {
+                deleteDevice(ctx.user.token, Number(id))
+                navigate('/configuracao/dispositivos')
+              }}>Deletar</Button>
+            </div>
+          </form>
+        </section>
+      </ErrorBoundary>
     </Container>
   )
 }

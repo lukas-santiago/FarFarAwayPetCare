@@ -40,3 +40,14 @@ export const saveDeviceConfigs = async (token: string, obj: any) => {
     headers: { Authorization: `Bearer ${token}` },
   })
 }
+
+export const deleteDevice = async (token: string, id: number) => {
+  return await axios.delete(host + 'api/Device/' + id, {
+    headers: { Authorization: `Bearer ${token}` },
+  })
+}
+export const addDevice = async (token: string, obj: any) => {
+  return await axios.post(host + 'api/Device', obj, {
+    headers: { Authorization: `Bearer ${token}` },
+  })
+}

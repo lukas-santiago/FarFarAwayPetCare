@@ -77,6 +77,10 @@ public class DeviceService : IDeviceService
         if (entity == null)
             throw new NotFoundException("Dispositivo não encontrado");
 
+        var deviceConfigs = _connection.DeviceConfig.Where(e => e.DeviceId == entity.Id).ToList();
+
+        entity.DeviceConfig = deviceConfigs;
+
         return await Task.FromResult(entity);
     }
 }

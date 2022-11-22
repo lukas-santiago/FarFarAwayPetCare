@@ -1,4 +1,5 @@
-﻿using Application.Controllers.Interfaces;
+﻿using Application.Attributes;
+using Application.Controllers.Interfaces;
 using Application.Models;
 using Application.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
@@ -30,6 +31,13 @@ public class DeviceDataController : ControllerBase, ICrudController<DeviceData>
     }
     [HttpPost]
     public async Task<IActionResult> Add([FromBody] DeviceData value)
+    {
+        return Ok(await _service.Add(value));
+    }
+    [HttpPost("FromDevice")]
+    [AllowAnonymous]
+    [DeviceApiKey]
+    public async Task<IActionResult> AddFromDevice([FromBody] DeviceData value)
     {
         return Ok(await _service.Add(value));
     }

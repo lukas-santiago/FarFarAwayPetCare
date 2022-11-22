@@ -1,35 +1,37 @@
 ﻿using System.Dynamic;
+using System.Net;
 using System.Net.Http.Json;
 using System.Text.Encodings.Web;
 using System.Text.Json;
-using System.Text.Unicode;
+using System.Threading;
+using MADE.Networking.Http.Requests.Json;
+using Newtonsoft.Json;
+using SimuladorDoFirmware.Models;
+using JsonSerializer = System.Text.Json.JsonSerializer;
 
-internal class Program
+namespace SimuladorDoFirmware;
+class Program
 {
-    private static async Task Main(string[] args)
+
+    public static Device configuration;
+    public static string ApiKey = "MinhaApiKeyTop";
+    public static Guid UniqueDeviceId = Guid.Parse("fd8d872d-3045-47c8-8b24-9db2d4807b7c"); //Guid.NewGuid();
+    public static string shortUniqueDeviceId = GuidHelper.ToShortString(UniqueDeviceId);
+
+    static async Task Main(string[] args)
     {
-        string ApiKey = "MinhaApiKeyTop";
-        Guid UniqueDeviceId = Guid.Parse("fd8d872d-3045-47c8-8b24-9db2d4807b7c"); //Guid.NewGuid();
-        string shortUniqueDeviceId = GuidHelper.ToShortString(UniqueDeviceId);
-
-
         Console.WriteLine("Guid: " + UniqueDeviceId.ToString());
         Console.WriteLine("Short Guid: " + shortUniqueDeviceId);
         Console.WriteLine("ApiKey: " + ApiKey);
 
         Estado estado = Estado.Configurando;
 
-        dynamic configuration;
 
         var jsonOptions = new JsonSerializerOptions
         {
             WriteIndented = true,
             Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
         };
-
-        // Busca Configuração
-        // Seta a configuração
-        // Executa a Configuração
 
         while (true)
         {
@@ -38,29 +40,27 @@ internal class Program
                 case Estado.Configurando:
                     {
                         Console.WriteLine("\nConfigurando");
-                        string requestUri = string.Format("https://localhost:7196/api/Device/configuracao/{0}?device_api_key={1}", UniqueDeviceId.ToString(), ApiKey);
-                        HttpClient client = new()
-                        {
-                            BaseAddress = new Uri(requestUri)
-                        };
+                        string url = string.Format("https://localhost:7196/api/Device/configuracao/{0}?device_api_key={1}", UniqueDeviceId.ToString(), ApiKey);
+                        JsonGetNetworkRequest request = new JsonGetNetworkRequest(new HttpClient(),url);
 
-                        HttpResponseMessage httpResponse = await client.GetAsync(requestUri);
-                        ExpandoObject? response = await client.GetFromJsonAsync<ExpandoObject>(requestUri, jsonOptions);
+                        var response = await request.ExecuteAsync<Device?>();
 
-                        Console.WriteLine(httpResponse.ToString());
+                        Console.WriteLine(response?.ToString());
                         Console.WriteLine(JsonSerializer.Serialize(response, jsonOptions));
 
                         if (response == null)
                             estado = Estado.StandBy;
                         else
                         {
-                            configuration = response!;
+                            configuration = response;
                             estado = Estado.Executando;
                         }
                         break;
                     }
                 case Estado.Executando:
                     Console.WriteLine("Executando...");
+
+                    ExecutionHelper.RunPH(configuration.DeviceConfig[0].Periodicidade);
                     break;
                 case Estado.StandBy:
                     Console.WriteLine(@"Não encontrada uma configuração válida. Entrando no modo StandBy.
@@ -73,5 +73,34 @@ internal class Program
             }
             Thread.Sleep(10000);
         }
+    }
+}
+public static class ExecutionHelper
+{
+    public static async Task RunPH(int period)
+    {
+        var timer = new PeriodicTimer(TimeSpan.FromSeconds(period));
+
+        while (await timer.WaitForNextTickAsync())
+        {
+            int random = new Random().Next(0, 140);
+            double ph = random / 100;
+            var data = new DeviceData()
+            {
+                Nome = ph.ToString(),
+                DeviceConfig = Program.configuration.DeviceConfig[0],
+                DeviceConfigId = (int)Program.configuration.DeviceConfig[0]?.Id,
+            };
+            await AddDeviceData(data);
+        }
+    }
+
+    public static async Task AddDeviceData(DeviceData deviceData)
+    {
+        var url = "https://localhost:7196/api/DeviceData/FromDevice?device_api_key=" + Program.ApiKey;
+
+        JsonPostNetworkRequest request = new JsonPostNetworkRequest(new HttpClient(), url, JsonConvert.SerializeObject(deviceData));
+        var response = await request.ExecuteAsync<dynamic>();
+        Console.WriteLine(response);
     }
 }

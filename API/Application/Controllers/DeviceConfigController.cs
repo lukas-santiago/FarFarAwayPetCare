@@ -1,4 +1,5 @@
-﻿using Application.Controllers.Interfaces;
+﻿using Application.Attributes;
+using Application.Controllers.Interfaces;
 using Application.Models;
 using Application.Models.View;
 using Application.Services.Interfaces;
@@ -25,6 +26,14 @@ public class DeviceConfigController : ControllerBase, ICrudController<DeviceConf
     }
     [HttpGet("byDevice")]
     public async Task<IActionResult> GetByDevice([FromQuery] int device_id)
+    {
+        return Ok(await _service.GetByDevice(device_id));
+
+    }
+    [HttpGet("byDeviceFromDevice")]
+    [DeviceApiKey]
+    [AllowAnonymous]
+    public async Task<IActionResult> GetByDeviceFromDevice([FromQuery] int device_id)
     {
         return Ok(await _service.GetByDevice(device_id));
 
