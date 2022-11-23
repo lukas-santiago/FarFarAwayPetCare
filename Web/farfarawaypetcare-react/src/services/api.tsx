@@ -2,6 +2,7 @@ import axios from 'axios'
 import { useContext } from 'react'
 import { useNavigate } from 'react-router-dom'
 import GlobalContext from '../contexts/global'
+import { Device } from '../types/types'
 
 const host = import.meta.env.VITE_BASE_URL || 'https://localhost:7196/'
 
@@ -15,7 +16,7 @@ export const postLogin = async (username: string, password: string) => {
 }
 
 export const getDevices = async (token: string) => {
-  return await axios.get(host + 'api/Device', {
+  return await axios.get<Device[]>(host + 'api/Device', {
     headers: { Authorization: `Bearer ${token}` },
   })
 }

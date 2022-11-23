@@ -16,7 +16,7 @@ export function LoginRoute() {
   async function login(e: any) {
     e.preventDefault()
     try {
-      let response = await postLogin(formData.username, formData.password)
+      let response : any = await postLogin(formData.username, formData.password)
       changeUser(response.data)
     } catch (error) {
       setFormData({
