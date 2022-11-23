@@ -9,7 +9,7 @@ const host = import.meta.env.VITE_BASE_URL || 'https://localhost:7196/'
 export const postLogin = async (username: string, password: string) => {
   console.log(host)
 
-  await axios.post(host + 'api/Auth/login', {
+  return await axios.post(host + 'api/Auth/login', {
     username,
     password,
   })
