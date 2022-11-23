@@ -21,14 +21,17 @@ class Program
     public static string ApiKey = "MinhaApiKeyTop";
     public static Guid UniqueDeviceId = Guid.Parse("fd8d872d-3045-47c8-8b24-9db2d4807b7c"); //Guid.NewGuid();
     public static string shortUniqueDeviceId = GuidHelper.ToShortString(UniqueDeviceId);
+    public static string host = "https://farfarawaypetcare-api.azurewebsites.net/"; //"https://localhost:7196/"
 
     static async Task Main(string[] args)
     {
         Console.WriteLine("Guid: " + UniqueDeviceId.ToString());
         Console.WriteLine("Short Guid: " + shortUniqueDeviceId);
         Console.WriteLine("ApiKey: " + ApiKey);
+        Console.WriteLine("Host: " + host);
 
         Estado estado = Estado.Configurando;
+
 
 
         var jsonOptions = new JsonSerializerOptions
@@ -44,7 +47,7 @@ class Program
                 case Estado.Configurando:
                     {
                         Console.WriteLine("\nConfigurando");
-                        string url = string.Format("https://localhost:7196/api/Device/configuracao/{0}?device_api_key={1}", UniqueDeviceId.ToString(), ApiKey);
+                        string url = string.Format(host + "api/Device/configuracao/{0}?device_api_key={1}", UniqueDeviceId.ToString(), ApiKey);
                         JsonGetNetworkRequest request = new JsonGetNetworkRequest(new HttpClient(), url);
 
                         var response = await request.ExecuteAsync<Device?>();
@@ -285,7 +288,7 @@ public static class ExecutionHelper
 
     public static async Task AddDeviceData(DeviceData deviceData)
     {
-        var url = "https://localhost:7196/api/DeviceData/FromDevice?device_api_key=" + Program.ApiKey;
+        var url = Program.host + "/api/DeviceData/FromDevice?device_api_key=" + Program.ApiKey;
         Console.WriteLine(JsonConvert.SerializeObject(deviceData));
 
         JsonPostNetworkRequest request = new JsonPostNetworkRequest(new HttpClient(), url, JsonConvert.SerializeObject(deviceData));
