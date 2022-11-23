@@ -23,6 +23,8 @@ jobs:
 
       - name: Instalando dependências
         uses: bahmutov/npm-install@v1
+        with:
+          working-directory: ./Web/farfarawaypetcare-react
 
       - name: Buildando
         run: npm run build
@@ -71,7 +73,7 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: .net-app
-      
+
       - name: Download do artefato do build-vite
         uses: actions/download-artifact@v2
         with:
