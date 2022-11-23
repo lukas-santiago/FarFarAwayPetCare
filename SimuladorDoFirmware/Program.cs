@@ -1,6 +1,9 @@
-﻿using System.Dynamic;
+﻿using System.Drawing;
+using System.Drawing.Imaging;
+using System.Dynamic;
 using System.Net;
 using System.Net.Http.Json;
+using System.Runtime.InteropServices;
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Threading;
@@ -62,13 +65,14 @@ class Program
                     Console.WriteLine("Executando...");
 
                     ExecutionHelper.RunPH(configuration.DeviceConfig[0].Periodicidade);
-                    ExecutionHelper.RunTemperatura(configuration.DeviceConfig[0].Periodicidade);
-                    ExecutionHelper.RunAmonia(configuration.DeviceConfig[0].Periodicidade);
-                    ExecutionHelper.RunImagem(configuration.DeviceConfig[0].Periodicidade);
-                    ExecutionHelper.RunIluminacao(configuration.DeviceConfig[0].extras);
-                    ExecutionHelper.RunTomada(configuration.DeviceConfig[0].extras);
-                    ExecutionHelper.RunAlimentacao(configuration.DeviceConfig[0].extras);
+                    ExecutionHelper.RunTemperatura(configuration.DeviceConfig[1].Periodicidade);
+                    ExecutionHelper.RunAmonia(configuration.DeviceConfig[2].Periodicidade);
+                    ExecutionHelper.RunImagem(configuration.DeviceConfig[3].Periodicidade);
+                    ExecutionHelper.RunIluminacao(configuration.DeviceConfig[4].extras);
+                    ExecutionHelper.RunTomada(configuration.DeviceConfig[5].extras);
+                    ExecutionHelper.RunAlimentacao(configuration.DeviceConfig[6].extras);
 
+                    estado = Estado.Off;
                     break;
                 case Estado.StandBy:
                     Console.WriteLine(@"Não encontrada uma configuração válida. Entrando no modo StandBy.
@@ -79,7 +83,6 @@ class Program
                 default:
                     break;
             }
-            Thread.Sleep(10000);
         }
     }
 }
@@ -92,10 +95,10 @@ public static class ExecutionHelper
         while (await timer.WaitForNextTickAsync())
         {
             int random = new Random().Next(0, 140);
-            double ph = random;
+            double ph = random / (double)100;
             var data = new DeviceData()
             {
-                Nome = ph.ToString().Insert(ph.ToString().Length > 2 ? 2 : 1, ","),
+                Value = ph,
                 //DeviceConfig = Program.configuration.DeviceConfig[0],
                 DeviceConfigId = (int)Program.configuration.DeviceConfig[0]?.Id,
                 CreatedOn = DateTime.Now,
@@ -110,11 +113,12 @@ public static class ExecutionHelper
 
         while (await timer.WaitForNextTickAsync())
         {
-            int random = new Random().Next(10, 40);
-            double temperatura = random;
+            int random = new Random().Next(100, 400);
+            double temperatura = random / (double)10;
             var data = new DeviceData()
             {
-                Nome = temperatura.ToString(),
+                Value = temperatura,
+                Nome = "ºC",
                 //DeviceConfig = Program.configuration.DeviceConfig[0],
                 DeviceConfigId = (int)Program.configuration.DeviceConfig[1]?.Id,
                 CreatedOn = DateTime.Now,
@@ -130,10 +134,11 @@ public static class ExecutionHelper
         while (await timer.WaitForNextTickAsync())
         {
             int random = new Random().Next(0, 110);
-            double amonia = random / 1000;
+            double amonia = random / (double)1000;
             var data = new DeviceData()
             {
-                Nome = string.Format("{0:N3}%", amonia),
+                Value = amonia,
+                Nome = " ppm",
                 //DeviceConfig = Program.configuration.DeviceConfig[0],
                 DeviceConfigId = (int)Program.configuration.DeviceConfig[2]?.Id,
                 CreatedOn = DateTime.Now,
@@ -152,7 +157,8 @@ public static class ExecutionHelper
             double amonia = random;
             var data = new DeviceData()
             {
-                Nome = string.Format("{0}%", amonia),
+                Value = amonia,
+                Nome = GenerateBase64ImageString(),
                 //DeviceConfig = Program.configuration.DeviceConfig[0],
                 DeviceConfigId = (int)Program.configuration.DeviceConfig[3]?.Id,
                 CreatedOn = DateTime.Now,
@@ -164,7 +170,7 @@ public static class ExecutionHelper
     public static async Task RunIluminacao(string extra)
     {
         var timer = new PeriodicTimer(TimeSpan.FromSeconds(60));
-        
+
         int[] timeIniText = extra.Split('-')[0].Split(':').ToList().Select(a => int.Parse(a)).ToArray();
         int[] timeFinalText = extra.Split('-')[1].Split(':').ToList().Select(a => int.Parse(a)).ToArray();
         TimeSpan timeIni = new TimeSpan(timeIniText[0], timeIniText[1], 0);
@@ -174,16 +180,23 @@ public static class ExecutionHelper
         {
             var now = DateTime.Now.TimeOfDay;
             int value = 0;
+            string nome = "";
 
             if (timeIni.Hours == now.Hours && timeIni.Minutes == now.Minutes)
+            {
                 value = 1;
+                nome = timeIni.ToString();
+            }
             else if (timeFinal.Hours == now.Hours && timeFinal.Minutes == now.Minutes)
-                value = 1;
+            {
+                value = 0;
+                nome = timeIni.ToString();
+            }
             else continue;
 
             var data = new DeviceData()
             {
-                Nome = string.Format("{0}%", value),
+                Value = value,
                 //DeviceConfig = Program.configuration.DeviceConfig[0],
                 DeviceConfigId = (int)Program.configuration.DeviceConfig[4]?.Id,
                 CreatedOn = DateTime.Now,
@@ -205,16 +218,23 @@ public static class ExecutionHelper
         {
             var now = DateTime.Now.TimeOfDay;
             int value = 0;
+            string nome = "";
 
             if (timeIni.Hours == now.Hours && timeIni.Minutes == now.Minutes)
+            {
                 value = 1;
+                nome = timeIni.ToString();
+            }
             else if (timeFinal.Hours == now.Hours && timeFinal.Minutes == now.Minutes)
+            {
                 value = 0;
+                nome = timeIni.ToString();
+            }
             else continue;
 
             var data = new DeviceData()
             {
-                Nome = string.Format("{0}%", value),
+                Value = value,
                 //DeviceConfig = Program.configuration.DeviceConfig[0],
                 DeviceConfigId = (int)Program.configuration.DeviceConfig[5]?.Id,
                 CreatedOn = DateTime.Now,
@@ -236,16 +256,24 @@ public static class ExecutionHelper
         {
             var now = DateTime.Now.TimeOfDay;
             int value = 0;
+            string nome = "";
 
             if (timeIni.Hours == now.Hours && timeIni.Minutes == now.Minutes)
+            {
                 value = 1;
+                nome = timeIni.ToString();
+            }
             else if (timeFinal.Hours == now.Hours && timeFinal.Minutes == now.Minutes)
+            {
                 value = 1;
+                nome = timeFinal.ToString();
+            }
             else continue;
 
             var data = new DeviceData()
             {
-                Nome = string.Format("{0}%", value),
+                Value = value,
+                Nome = nome,
                 //DeviceConfig = Program.configuration.DeviceConfig[0],
                 DeviceConfigId = (int)Program.configuration.DeviceConfig[6]?.Id,
                 CreatedOn = DateTime.Now,
@@ -263,5 +291,30 @@ public static class ExecutionHelper
         JsonPostNetworkRequest request = new JsonPostNetworkRequest(new HttpClient(), url, JsonConvert.SerializeObject(deviceData));
         var response = await request.ExecuteAsync<dynamic>();
         Console.WriteLine(response);
+    }
+
+    public static string GenerateBase64ImageString()
+    {
+        // 1. Create a bitmap
+        using (Bitmap bitmap = new Bitmap(80, 20, PixelFormat.Format24bppRgb))
+        {
+            // 2. Get access to the raw bitmap data
+            BitmapData data = bitmap.LockBits(new Rectangle(0, 0, bitmap.Width, bitmap.Height), ImageLockMode.WriteOnly, bitmap.PixelFormat);
+
+            // 3. Generate RGB noise and write it to the bitmap's buffer.
+            // Note that we are assuming that data.Stride == 3 * data.Width for simplicity/brevity here.
+            byte[] noise = new byte[data.Width * data.Height * 3];
+            new Random().NextBytes(noise);
+            Marshal.Copy(noise, 0, data.Scan0, noise.Length);
+
+            bitmap.UnlockBits(data);
+
+            // 4. Save as JPEG and convert to Base64
+            using (MemoryStream jpegStream = new MemoryStream())
+            {
+                bitmap.Save(jpegStream, ImageFormat.Jpeg);
+                return Convert.ToBase64String(jpegStream.ToArray());
+            }
+        }
     }
 }

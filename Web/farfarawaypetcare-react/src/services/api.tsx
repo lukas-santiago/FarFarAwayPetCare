@@ -51,3 +51,9 @@ export const addDevice = async (token: string, obj: any) => {
     headers: { Authorization: `Bearer ${token}` },
   })
 }
+
+export const getRelatorioColeta = async (token: string, id: string | number) => {
+  return await axios.get(host + 'api/RelatorioColeta/' + Number(id), {
+    headers: { Authorization: `Bearer ${token}` },
+  })
+}

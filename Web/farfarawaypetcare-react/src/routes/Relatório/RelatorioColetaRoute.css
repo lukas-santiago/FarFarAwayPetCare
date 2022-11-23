@@ -1,0 +1,15 @@
+.relatorio-values {
+  display: flex;
+  gap: 1em;
+  flex-wrap: wrap;
+  justify-items: center;
+}
+
+.relatorio-values > div {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 20%;
+  padding: 2em;
+  background-color: rgb(216, 216, 216);
+  border-radius: 1em
+}

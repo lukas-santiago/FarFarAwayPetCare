@@ -63,7 +63,7 @@ export function ConfiguracaoDispositivoDetalhesRoute() {
       },
     },
     onSubmit: (values: DeviceConfigForm) => {
-      alert(JSON.stringify(values, null, 2))
+      // alert(JSON.stringify(values, null, 2))
 
       const ph: Partial<DeviceConfig> = {
         deviceConfigTypeId: 1,

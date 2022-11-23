@@ -5,7 +5,8 @@ enum Estado
 {
     Configurando,
     Executando,
-    StandBy
+    StandBy,
+    Off
 }
 
 // Busca Configuração

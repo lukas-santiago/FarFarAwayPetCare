@@ -43,7 +43,7 @@ function App() {
   return (
     <GlobalContext.Provider value={value}>
       <Routes>
-        <Route path="/" element={<InicioRoute />} />
+        <Route path="/" element={user ? <ContentLayout child={<InicioRoute />} /> : <InicioRoute />} />
         <Route path="/login" element={<LoginRoute />} />
         <Route path="/register" element={<RegisterRoute />} />
         {user ? (
@@ -70,7 +70,7 @@ function App() {
         ) : (
           ''
         )}
-        <Route path="/sobre" element={<SobreRoute />} />
+        <Route path="/sobre" element={user ? <ContentLayout child={<SobreRoute />} /> : <SobreRoute />} />
         <Route path="*" element={<Navigate replace to="/" />} />
       </Routes>
     </GlobalContext.Provider>
