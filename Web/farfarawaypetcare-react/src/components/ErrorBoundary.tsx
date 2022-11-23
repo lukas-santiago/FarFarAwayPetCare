@@ -1,7 +1,7 @@
 import React from 'react';
 
-export class ErrorBoundary extends React.Component {
-  constructor(props: {} | Readonly<{}>) {
+export class ErrorBoundary extends React.Component<{ children?: any }, { errorInfo: any, error: any }> {
+  constructor(props: any) {
     super(props);
     this.state = { error: null, errorInfo: null };
   }

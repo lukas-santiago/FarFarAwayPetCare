@@ -1,7 +1,4 @@
-# Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
-# More GitHub Actions for Azure: https://github.com/Azure/actions
-
-name: Build and deploy ASP.Net Core app to Azure Web App - farfarawaypetcare-api
+name: Buildando .NET, frontend e subindo no Azure
 
 on:
   push:
@@ -10,25 +7,53 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  build-vite:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./Web/farfarawaypetcare-react
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v2
 
+      - name: Setup do Node
+        uses: actions/setup-node@v1
+        with:
+          node-version: 16
+
+      - name: Instalando dependências
+        uses: bahmutov/npm-install@v1
+
+      - name: Buildando
+        run: npm run build
+
+      - name: Upload dos production-ready build files
+        uses: actions/upload-artifact@v2
+        with:
+          name: production-files
+          path: ./dist
+
+  build-dotnet:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./API/Application
     steps:
       - uses: actions/checkout@v2
 
-      - name: Set up .NET Core
+      - name: Configurando .NET 6
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: '6.0.401'
+          dotnet-version: "6.0.401"
           include-prerelease: true
 
-      - name: Build with dotnet
-        run: dotnet build --configuration Release
+      - name: Buildando
+        run: dotnet build --configuration Production
 
       - name: dotnet publish
-        run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
+        run: dotnet publish -c Production -o ${{env.DOTNET_ROOT}}/myapp
 
-      - name: Upload artifact for deployment job
+      - name: Upload do artefato para deploy
         uses: actions/upload-artifact@v2
         with:
           name: .net-app
@@ -36,22 +61,28 @@ jobs:
 
   deploy:
     runs-on: ubuntu-latest
-    needs: build
+    needs: build-dotnet
     environment:
-      name: 'production'
+      name: "production"
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
 
     steps:
-      - name: Download artifact from build job
+      - name: Download do artefato do build
         uses: actions/download-artifact@v2
         with:
           name: .net-app
+      
+      - name: Download do artefato do build-vite
+        uses: actions/download-artifact@v2
+        with:
+          name: production-files
+          path: ./wwwroot
 
-      - name: Deploy to Azure Web App
+      - name: Deploy no Azure
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v2
         with:
-          app-name: 'farfarawaypetcare-api'
-          slot-name: 'production'
+          app-name: "farfarawaypetcare-api"
+          slot-name: "production"
           publish-profile: ${{ secrets.AzureAppService_PublishProfile_6d94ee2b341f4524a87f3c350436029f }}
           package: .

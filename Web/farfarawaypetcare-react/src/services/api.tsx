@@ -3,13 +3,16 @@ import { useContext } from 'react'
 import { useNavigate } from 'react-router-dom'
 import GlobalContext from '../contexts/global'
 
-const host = 'https://localhost:7196/'
+const host = import.meta.env.VITE_BASE_URL || 'https://localhost:7196/'
 
-export const postLogin = async (username: string, password: string) =>
+export const postLogin = async (username: string, password: string) => {
+  console.log(host)
+
   await axios.post(host + 'api/Auth/login', {
     username,
     password,
   })
+}
 
 export const getDevices = async (token: string) => {
   return await axios.get(host + 'api/Device', {
